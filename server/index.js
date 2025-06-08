@@ -4,10 +4,11 @@ import subscriptionRouter from "./routes/subscribtion.routes.js";
 import userRouter from "./routes/user.routes.js";
 import { PORT } from "./config/env.js";
 import conncetMongoDB from "./database/mongoDb.js";
+import cors from "cors";
 const app = express();
 
 app.use(express.json());
-
+app.use(cors({ origin: "http://localhost:5173", credentials: true })); // Adjust the origin as needed
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/subscriptions", subscriptionRouter);
