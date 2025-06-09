@@ -5,8 +5,9 @@ import userRouter from "./routes/user.routes.js";
 import { PORT } from "./config/env.js";
 import conncetMongoDB from "./database/mongoDb.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 const app = express();
-
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors({ origin: "http://localhost:5173", credentials: true })); // Adjust the origin as needed
 app.use("/api/v1/auth", authRouter);

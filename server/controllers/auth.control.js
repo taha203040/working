@@ -3,6 +3,7 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/env.js";
 import { comparePass, hashPassword } from "../utils/hashing.js";
+import cookieParser from "cookie-parser";
 // Register a new user
 
 export const signUp = async (req, res, next) => {
@@ -52,6 +53,13 @@ export const signIn = async (req, res, next) => {
     const token = jwt.sign({ id: userExist._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     });
+    // Set the token in a cookie
+    res.cookie("token", token,{
+      httponly: true,
+      secure : process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite :"Strict", // Prevent CSRF attacks
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    })
     res.status(200).json({
       msg: "Login successful",
       user: userExist,
@@ -69,13 +77,15 @@ export const signIn = async (req, res, next) => {
 //
 export const logout = async (req, res, next) => {
   try {
-    res.clearCookie("token", { httpOnly: true, secure: true });
-
-    return res
-      .status(200)
-      .json({ message: "Logout successful", success: true });
-  } catch (error) {
-    console.error("Error during logout:", error);
-    return res.status(500).json({ message: "Logout failed", success: false });
+res.clearCookie("token",{
+  httpOnly : true,
+  secure : process.env.NODE_ENV === "production", // Use secure cookies in production
+  sameSite: "Strict", // Prevent CSRF attacks
+  maxAge: 0, // Set maxAge to 0 to delete the cookie
+})    }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Server error", success: false });
+    next(error);
   }
-};
+}
