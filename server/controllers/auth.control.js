@@ -54,12 +54,12 @@ export const signIn = async (req, res, next) => {
       expiresIn: JWT_EXPIRES_IN,
     });
     // Set the token in a cookie
-    res.cookie("token", token,{
+    res.cookie("token", token, {
       httponly: true,
-      secure : process.env.NODE_ENV === "production", // Use secure cookies in production
-      sameSite :"Strict", // Prevent CSRF attacks
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: "Strict", // Prevent CSRF attacks
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-    })
+    });
     res.status(200).json({
       msg: "Login successful",
       user: userExist,
@@ -77,15 +77,26 @@ export const signIn = async (req, res, next) => {
 //
 export const logout = async (req, res, next) => {
   try {
-res.clearCookie("token",{
-  httpOnly : true,
-  secure : process.env.NODE_ENV === "production", // Use secure cookies in production
-  sameSite: "Strict", // Prevent CSRF attacks
-  maxAge: 0, // Set maxAge to 0 to delete the cookie
-})    }
-  catch (error) {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: "Strict", // Prevent CSRF attacks
+      maxAge: 0, // Set maxAge to 0 to delete the cookie
+    });
+  } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Server error", success: false });
     next(error);
   }
-}
+};
+export const checkCookie = () => {
+  const token = req.cookies.token;
+  if (!token) res.status(404).json({ msg: "token found" });
+  try {
+    const user = jwt.verify(token, JWT_SECRET);
+    res.json({ authenticated: true, user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ authenticated: false, msg: error });
+  }
+};
