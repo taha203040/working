@@ -11,3 +11,5 @@ noteSchema.pre("save", function (next) {
   this.updatedAt = dayjs();
   next();
 });
+const Note = mongoose.model("Note" , noteSchema)
+export default Note
