@@ -21,7 +21,7 @@ app.use(
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/subscriptions", subscriptionRouter);
-app.use("/api/v1/notes", notesRouter);
+app.use("/api/v1/", notesRouter);
 app.get("/", (req, res) => {
   res.send("Welcome to the API");
 });

@@ -52,13 +52,13 @@ export const signIn = async (req, res, next) => {
     const token = jwt.sign({ id: userExist._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     });
-    
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: NODE_ENV === "production", // Use secure cookies in production
       sameSite: NODE_ENV === "production" ? "None" : "Lax", // Prevent CSRF attacks
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-        path: "/", // Important! Makes cookie available on all routes
+      path: "/", // Important! Makes cookie available on all routes
     });
 
     res.status(200).json({

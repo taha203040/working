@@ -1,6 +1,6 @@
 import Note from "../models/notes.model.js";
 
-export const createNote = async () => {
+export const createNote = async (req , res) => {
   try {
     const note = new Note(req.body);
     await note.save();
