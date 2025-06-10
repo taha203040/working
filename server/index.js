@@ -6,6 +6,7 @@ import { PORT } from "./config/env.js";
 import conncetMongoDB from "./database/mongoDb.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import notesRouter from "./routes/notes.routes.js"
 const app = express();
 app.use(cookieParser());
 app.use(express.json());

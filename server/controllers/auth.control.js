@@ -89,14 +89,20 @@ export const logout = async (req, res, next) => {
     next(error);
   }
 };
-export const checkCookie = () => {
+
+export const checkCookie = (req, res) => {
   const token = req.cookies.token;
-  if (!token) res.status(404).json({ msg: "token found" });
+  if (!token) {
+    return res
+      .status(401)
+      .json({ authenticated: false, msg: "No token provided" });
+  }
+
   try {
     const user = jwt.verify(token, JWT_SECRET);
-    res.json({ authenticated: true, user });
+    return res.json({ authenticated: true, user });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ authenticated: false, msg: error });
+    console.error("JWT verification error:", error.message);
+    return res.status(403).json({ authenticated: false, msg: "Invalid token" });
   }
 };
