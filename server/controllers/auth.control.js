@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/env.js";
+import { JWT_SECRET, JWT_EXPIRES_IN, NODE_ENV } from "../config/env.js";
 import { comparePass, hashPassword } from "../utils/hashing.js";
-import cookieParser from "cookie-parser";
 // Register a new user
 
 export const signUp = async (req, res, next) => {
@@ -53,13 +52,15 @@ export const signIn = async (req, res, next) => {
     const token = jwt.sign({ id: userExist._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     });
-    // Set the token in a cookie
+    
     res.cookie("token", token, {
-      httponly: true,
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      sameSite: "Strict", // Prevent CSRF attacks
+      httpOnly: true,
+      secure: NODE_ENV === "production", // Use secure cookies in production
+      sameSite: NODE_ENV === "production" ? "None" : "Lax", // Prevent CSRF attacks
       maxAge: 24 * 60 * 60 * 1000, // 1 day
+        path: "/", // Important! Makes cookie available on all routes
     });
+
     res.status(200).json({
       msg: "Login successful",
       user: userExist,
