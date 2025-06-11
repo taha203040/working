@@ -3,7 +3,7 @@ import Note from "../models/notes.model.js";
 export const createNote = async (req, res) => {
   try {
     const note = new Note({ content: req.body.content, user: req.body.user });
-    console.log(req.body);
+    // console.log(req);
     await note.save();
     res.status(201).json(note);
   } catch (error) {

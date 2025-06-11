@@ -84,6 +84,7 @@ export const logout = async (req, res, next) => {
       sameSite: "Strict", // Prevent CSRF attacks
       maxAge: 0, // Set maxAge to 0 to delete the cookie
     });
+    return res.status(200).json({ msg: "Logged out ", success: true });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Server error", success: false });

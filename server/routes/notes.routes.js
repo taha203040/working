@@ -8,7 +8,7 @@ import {
 
 const notesRouter = Router();
 
-notesRouter.get("/notes/:id", getNotesById);
-notesRouter.put("/notes/:userId", editNote);
+notesRouter.get("/notes/:userId", getNotesById);
+notesRouter.put("/notes/:id", editNote);
 notesRouter.post("/notes/create/", createNote);
 export default notesRouter;
