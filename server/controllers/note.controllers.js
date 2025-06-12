@@ -1,4 +1,5 @@
 import Note from "../models/notes.model.js";
+import notesRouter from "../routes/notes.routes.js";
 
 export const createNote = async (req, res) => {
   try {
@@ -35,6 +36,17 @@ export const getNotesById = async (req, res) => {
     const userId = req.params.userId;
     const notes = await Note.find({ user: userId });
     res.status(200).json(notes);
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const deleteNoteById = async (req, res) => {
+  try {
+    const deleteNote = await Note.findByIdAndDelete(req.params.id);
+    if (!deleteNote) {
+      res.status(400).json({ msg: "Error delete", succses: false });
+    }
+    res.status(200).json({ msg: "Note deleted succses", succses: true });
   } catch (err) {
     console.log(err);
   }
